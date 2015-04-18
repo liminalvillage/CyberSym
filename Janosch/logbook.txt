@@ -4,40 +4,54 @@ Mo 30.3. (2h)
 - Attending Introductary lecture (Bredeweg/van Someren)
 
 Fr 3.4. (6h)
--Writing and submitting tender applications to the CyberSym and Cyberfarming projets offered by Roberto Valenti (Assignment 1). 
+- Writing and submitting tender applications to the CyberSym and Cyberfarming projets offered by 
+	Roberto Valenti (Assignment 1). 
 - Summarizing the ideas and determining the research types of these two projects (Assignment 2).
 
 We 8.4. (2h)
 -Attending a lecture about the overall criteria for writing academic papers (van Someren)
 
 Th 9.4. (6h)
--First meeting with Roberto and Quiri; Trying to delimit the project - this however fails and it is agreed to try to find suitable projects in the course of the next week.
-- Evaluating the provided 'Omelette du fromage' paper based on the criteria for academic papers (Assignment 3).
+- First meeting with Roberto and Quiri; Trying to delimit the project - this however fails and it 
+	is agreed to try to find suitable projects in the course of the next week.
+- Evaluating the provided 'Omelette du fromage' paper based on the criteria for academic papers 
+	(Assignment 3).
 
 Mo 13.4. (5h)
 - Lecture about ...logics (van Rooij) and differences in AI research (van Someren)
-- Meeting with Quiri; Trying to distinguish two equal projects based on our ideas about the problem domain; We however become unsure about the AI-factor of the projet and agree to spend one more day to try to find suitable projects. I contact Bert Bredeweg and Auke Wiggers for more info on the BSc project and MAS, respectively
+- Meeting with Quiri; Trying to distinguish two equal projects based on our ideas about the problem 
+	domain; We however become unsure about the AI-factor of the projet and agree to spend one more 
+	day to try to find suitable projects. I contact Bert Bredeweg and Auke Wiggers for more info 
+	on the BSc project and MAS, respectively
 
 Tu 14.4. (8h)
-- Searching for papers about the CyberSyn project, AAs and MAS; Reading several pieces and trying to form an overall idea about possible approaches and missing bits. 
-- Discussing the idea with Auke and contacting Arnoud Visser for more info on the domain of MAS; Arnoud redirected me to Elise Koster who wrote her bachelor thesis on a comparable topic (religion in hunter-gatherer societies); She could point me to some interesting articles
+- Searching for papers about the CyberSyn project, AAs and MAS; Reading several pieces and trying 
+	to form an overall idea about possible approaches and missing bits. 
+- Discussing the idea with Auke and contacting Arnoud Visser for more info on the domain of MAS; 
+	Arnoud redirected me to Elise Koster who wrote her bachelor thesis on a comparable topic 
+	(religion in hunter-gatherer societies); She could point me to some interesting articles
 - Reading some high-level introductory papers in order to find an entry point to the problem
 - Starting to collect an annotated bibliography (Assingment 4).
 
 We 15.4. (5h)
-- Meeting with Quiri and later with Quiri and Roberto. Elaborating the proposed research directeion and trying to further separate our research questions. New approach: Quiri takes the Venus Project and I will focus on the CyberSyn Project. Problem: On lower levels, they will be quite identical. I don't know whether I will reach the recursion level - So we have to work that out some more.
+- Meeting with Quiri and later with Quiri and Roberto. Elaborating the proposed research 
+	directeion and trying to further separate our research questions. New approach: Quiri takes 
+	the Venus Project and I will focus on the CyberSyn Project. Problem: On lower levels, they 
+	will be quite identical. I don't know whether I will reach the recursion level - So we have 
+	to work that out some more.
 - Reading some more papers and downloading MASON and NetBeans
 
 Th 16.4. (8h)
 - Reading some more papers, dowloading some additional ones:
-- Setting up MASON and NetBeans, compiling and running a first tutorial program - but 
-then NetBeans crashes and destroys the entire directory. Clean remove of everything -
-starting over with MASON and IntelliJ.
+- Setting up MASON and NetBeans, compiling and running a first tutorial program - but then NetBeans 
+	crashes and destroys the entire directory. Clean remove of everything - starting over with 
+	MASON and Intellij.
 
 Fr 17.4. (10h)
--Creating an annotated bibliography of the papers found so far and putting them in relation to each other through Research Territory Mapping (RTM). 
+- Creating an annotated bibliography of the papers found so far and putting them in relation to 
+	each other through Research Territory Mapping (RTM). 
 - Developping keywords for the project and creating a concept map of the proposed project approach. 
-- Writing a problem description draft (max 200w)
+- Writing a problem description draft (max 200w - all points above required for Assignment 4)
 - Preparing first things for the project approach presentation.
 
 

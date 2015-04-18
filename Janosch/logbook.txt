@@ -24,6 +24,20 @@ Tu 14.4. (8h)
 - Reading some high-level introductory papers in order to find an entry point to the problem
 - Starting to collect an annotated bibliography (Assingment 4).
 
+We 15.4. (5h)
+- Meeting with Quiri and later with Quiri and Roberto. Elaborating the proposed research directeion and trying to further separate our research questions. New approach: Quiri takes the Venus Project and I will focus on the CyberSyn Project. Problem: On lower levels, they will be quite identical. I don't know whether I will reach the recursion level - So we have to work that out some more.
+- Reading some more papers and downloading MASON and NetBeans
 
+Th 16.4. (8h)
+- Reading some more papers, dowloading some additional ones:
+- Setting up MASON and NetBeans, compiling and running a first tutorial program - but 
+then NetBeans crashes and destroys the entire directory. Clean remove of everything -
+starting over with MASON and IntelliJ.
+
+Fr 17.4. (10h)
+-Creating an annotated bibliography of the papers found so far and putting them in relation to each other through Research Territory Mapping (RTM). 
+- Developping keywords for the project and creating a concept map of the proposed project approach. 
+- Writing a problem description draft (max 200w)
+- Preparing first things for the project approach presentation.
 
 

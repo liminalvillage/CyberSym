@@ -84,10 +84,12 @@ Sa 25.4. (1 1/2h)
 - Setting up Repast and starting the tutorial
 
 So 26.4. (7 1/2h)
-- Completing the tutorial and working on a first attempt to my CyberSym simulation. At the end of the 		day I have basic agents and resources; The agents die over time as they cannot yet get
+- Completing the tutorial and working on a first attempt to my CyberSym simulation. At the end of the 		
+	day I have basic agents and resources; The agents die over time as they cannot yet get
 	resources - and the resources keep regenerating till infinity. But it's a start.
 
 Mo 27.4. (8h)
-- Continue to work on the model. At the end of the day, agents can extend their lifespan by mining 	resources untill they are exhausted. Then the same happens as did yesterday - Everyone dies.
+- Continue to work on the model. At the end of the day, agents can extend their lifespan by mining 	
+	resources untill they are exhausted. Then the same happens as did yesterday - Everyone dies.
 - Commenting everything I have done so far
 - Setting up Repast on my Laptop 

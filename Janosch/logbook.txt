@@ -54,4 +54,40 @@ Fr 17.4. (10h)
 - Writing a problem description draft (max 200w - all points above required for Assignment 4)
 - Preparing first things for the project approach presentation.
 
+Sa 18.4. (4h)
+- Installing + Setting up Intellij and MASON
+- Running the first few tutorials from the MASON tutorial directory and getting used to Java again
 
+Mo 20.4. (5h) 
+- Continue working on the MASON tutorials and creating first simple simulations
+- Meeting with Roberto and Quiuri, finally dividing the project approaches
+- Deciding to switch to Repast (which Quiri chose) to make possible a combination of the code after 
+	the end of the project period
+
+We 22.4. (6h)
+- Preparing the slides for the Project Proposal Presentation on friday
+- Extending literature review for the Project Proposal Assignment due on friday
+
+Do 23.4. (6 1/2h)
+- Meeting with Roberto to check the Presentation Slides
+- Reading and scanning the remaining found literature and drawing up a draft for the Poject Proposal's 
+	Literature Review
+- Creating Gantt and PERT charts of project planning
+
+Fr 24.4. (8h)
+- Project Proposal Presentation. The presentation went well, my voice however didn't obey me in the 
+	beginning (for the first time ever - we will work on that for the next presentation)
+- Meeting with Roberto and Quiri to plan the next week
+- Writing the Project Proposal (Assignment 6)
+
+Sa 25.4. (1 1/2h)
+- Setting up Repast and starting the tutorial
+
+So 26.4. (7 1/2h)
+- Completing the tutorial and working on a first attempt to my CyberSym simulation. At the end of the 		day I have basic agents and resources; The agents die over time as they cannot yet get
+	resources - and the resources keep regenerating till infinity. But it's a start.
+
+Mo 27.4. (8h)
+- Continue to work on the model. At the end of the day, agents can extend their lifespan by mining 	resources untill they are exhausted. Then the same happens as did yesterday - Everyone dies.
+- Commenting everything I have done so far
+- Setting up Repast on my Laptop 

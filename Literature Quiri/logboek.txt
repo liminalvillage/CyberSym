@@ -9,7 +9,7 @@ ma 28-4:	sick
 di 29-4:	sick, 1h other course
 wo 30-4:	sick, 3h other course
 do 1-5:		5h programming
-vr 2-5:		5h programming
+vr 2-5:		9h programming
 za 3-5:		3h other course
 zo 4-5:		-
 

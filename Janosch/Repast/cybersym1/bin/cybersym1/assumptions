@@ -1,0 +1,28 @@
+A list of all assumptions and design decisions concerning the CyberSym project
+
+- Agents are myopic (short sighted) and only can see/reach other Agents and Sources within a given scope (can be set as simulation parameters)
+- Agents cannot ask other Agents which Resources they can get
+- Resources are discrete and non-sharable
+- Time is expressed as number of ticks
+- Agents can perform one action per tick
+- Agents and Sources are placed randomly in the environment 
+- The environment's borders "wrap around" so that the environment actually can be seen as a globe
+- Per extraction, one Resource is obtained
+- Extraction cost equals the pythagorean distance to the Source
+- Sources may be regenerative. Parameters can be set in the simulation interface
+- Per assembly action only two items can be combined
+- Assembling products costs the size of it's items.
+- Transporting cost equals the pythagorean distance to the receiving Agent
+- Consuming a demanded product increases the Agent's lifespan by the size of the product multiplied by ten. The product is destroyed in the process
+
+- At the current state, resource requests are not propagated through the network (=> only local interaction possible)
+- At the current state, Agents differentiate between own and neighbor's demands
+- At the current state, an Agent decides his action using the following decision flow:
+	1) If I can consume a product, I will consume it
+	2) If I can extract a Resource I need, I extract it
+	3) If I can assemble (partial) products I need with the resources I have, I assemble them
+	4) If I have Resources requested by an Agent in my neighborhood, I deliver it to him
+	5) If I can extract a Resource requested by an Agent in my neighborhood, I will extract it
+- At the current state, the Resource to be extracted is chosen randomly from a list of demanded ones
+- At the current state, Sources are chosen randomly
+- At the current state, neighbor requests are fulfilled randomly

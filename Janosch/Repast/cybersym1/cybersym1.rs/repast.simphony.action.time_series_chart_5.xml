@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>Agents + Sources</name>
-  <dataSet>Item Counts</dataSet>
+  <name>Agent Counter</name>
+  <dataSet>Agent Counter</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
   <yAxisLabel>Units</yAxisLabel>
-  <chartTitle>Surviving Agents + Remining Sources</chartTitle>
+  <chartTitle>Agent Count vs. Source Count</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>255</red>
@@ -25,8 +25,8 @@
       <SeriesData>
         <label>Source Count</label>
         <color>
-          <red>255</red>
-          <green>0</green>
+          <red>0</red>
+          <green>153</green>
           <blue>0</blue>
           <alpha>255</alpha>
         </color>

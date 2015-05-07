@@ -1,7 +1,7 @@
 Logbook
 
 Mo 30.3. (2h)
-- Attending Introductary lecture (Bredeweg/van Someren)
+- Attending Introductary lecture of the Bachelor's project phase (Bredeweg/van Someren)
 
 Fr 3.4. (6h)
 - Writing and submitting tender applications to the CyberSym and Cyberfarming projets offered by 
@@ -12,17 +12,18 @@ We 8.4. (2h)
 -Attending a lecture about the overall criteria for writing academic papers (van Someren)
 
 Th 9.4. (6h)
-- First meeting with Roberto and Quiri; Trying to delimit the project - this however fails and it 
-	is agreed to try to find suitable projects in the course of the next week.
+- First meeting with Roberto and Quiri; Trying to find two equally demanding aspects in order to
+	split the project in two parts and delimit the individual projects - this however fails 
+	and it is agreed to try to find suitable projects in the course of the next week.
 - Evaluating the provided 'Omelette du fromage' paper based on the criteria for academic papers 
 	(Assignment 3).
 
 Mo 13.4. (5h)
-- Lecture about ...logics (van Rooij) and differences in AI research (van Someren)
+- Lecture about non-consistent logics (van Rooij) and differences in AI research (van Someren)
 - Meeting with Quiri; Trying to distinguish two equal projects based on our ideas about the problem 
-	domain; We however become unsure about the AI-factor of the projet and agree to spend one more 
-	day to try to find suitable projects. I contact Bert Bredeweg and Auke Wiggers for more info 
-	on the BSc project and MAS, respectively
+	domain; We however get more and more concerned about the AI-factor of the projet and agree  
+	to spend one more day to try to find suitable projects. I contact Bert Bredeweg and Auke  
+	Wiggers for more info on the BSc project and MAS, respectively
 
 Tu 14.4. (8h)
 - Searching for papers about the CyberSyn project, AAs and MAS; Reading several pieces and trying 
@@ -42,7 +43,7 @@ We 15.4. (5h)
 - Reading some more papers and downloading MASON and NetBeans
 
 Th 16.4. (8h)
-- Reading some more papers, dowloading some additional ones:
+- Reading some more papers and dowloading some additional ones
 - Setting up MASON and NetBeans, compiling and running a first tutorial program - but then NetBeans 
 	crashes and destroys the entire directory. Clean remove of everything - starting over with 
 	MASON and Intellij.
@@ -51,7 +52,7 @@ Fr 17.4. (10h)
 - Creating an annotated bibliography of the papers found so far and putting them in relation to 
 	each other through Research Territory Mapping (RTM). 
 - Developping keywords for the project and creating a concept map of the proposed project approach. 
-- Writing a problem description draft (max 200w - all points above required for Assignment 4)
+- Writing a problem description draft (max 200 words - all points above required for Assignment 4)
 - Preparing first things for the project approach presentation.
 
 Sa 18.4. (4h)
@@ -60,7 +61,9 @@ Sa 18.4. (4h)
 
 Mo 20.4. (5h) 
 - Continue working on the MASON tutorials and creating first simple simulations
-- Meeting with Roberto and Quiuri, finally dividing the project approaches
+- Meeting with Roberto and Quiuri and finally dividing the project approaches: I will focus on the 
+	distribution of resources and products in the agent network, Quiri will have a look at the
+	demand/supply regulation 
 - Deciding to switch to Repast (which Quiri chose) to make possible a combination of the code after 
 	the end of the project period
 
@@ -68,7 +71,7 @@ We 22.4. (6h)
 - Preparing the slides for the Project Proposal Presentation on friday
 - Extending literature review for the Project Proposal Assignment due on friday
 
-Th 23.4. (6 1/2h)
+Do 23.4. (6 1/2h)
 - Meeting with Roberto to check the Presentation Slides
 - Reading and scanning the remaining found literature and drawing up a draft for the Poject Proposal's 
 	Literature Review
@@ -81,15 +84,73 @@ Fr 24.4. (8h)
 - Writing the Project Proposal (Assignment 6)
 
 Sa 25.4. (1 1/2h)
-- Setting up Repast and starting the tutorial
+- Setting up Repast and start working on the tutorial
 
 So 26.4. (7 1/2h)
-- Completing the tutorial and working on a first attempt to my CyberSym simulation. At the end of the 		
-	day I have basic agents and resources; The agents die over time as they cannot yet get
-	resources - and the resources keep regenerating till infinity. But it's a start.
+- Completing the tutorial 
+- Working on a first attempt to my CyberSym simulation. At the end of the day I have basic agents and 
+	resources; The agents die in the course of time as they cannot yet get any resources - and the
+	resources keep regenerating till infinity. But it's a start.
+	Design choices so far: I implemented different classes for the Agents, Resources and Sources
+	(the locations where Resources spawn and can be extracted by the Agents). Resources are 
+	represented by letters of the english alphabet that in the next steps can be used to assemble
+	products to be consumed by the agents. The Resource class is necessary as a resource has much
+	more features than just its resource type. 
 
-Mo 27.4. (8h)
+Mo 27.4. (6h)
 - Continue to work on the model. At the end of the day, agents can extend their lifespan by mining 	
 	resources untill they are exhausted. Then the same happens as did yesterday - Everyone dies.
+	Sources may regenrate at a given (randomized) rate, Agents can extract one Resource unit per
+	cycle. Extracting a resource costs the equivalent of the pyhtagorean distance between Agent 
+	and Source. The environment grid "wraps around" so that its border connect to those on the 
+	opposite side of the grid. The environment thus effectively forms a globe.
 - Commenting everything I have done so far
 - Setting up Repast on my Laptop 
+
+Tu 28.4. (6 1/2h)
+- Further work on the model. Adding a function to read a comma separated list of words from a file in
+	order to create the possible products that can be assembled by the agents. Implementing a
+	Product class to hold the features of an assembled product. Updating Resource and Agent class
+	to add the possibility of creating products and starting to work on functions to assemble pro-
+	ducts from Resources. 
+
+We 29.4. (7h)
+- Adding functions for combining basic Resources to partial products, combining Resources and partial
+	Products as well as combining Product parts themselves. Implementing functions to generate 
+	a list of all indirect demands that can be derived from the Product demand.  
+
+Th 30.4. (7 1/2h)
+- Updating the different classes to fully incorporate the production of assembled items and the 
+	consumption thereof. Experimenting with the built-in visualisation tools of Repast and genera-
+	ting a number of different visualisations. Debugging some of the functionalities
+
+Fr 1.5. (6h)
+- Implementing a first linear decision mechanism. Developing a useful order and fixing some issues that
+	arose through paralellity (some instances were not yet instantiated when called by other in-
+	stances etc.
+
+Sa 2.5. (5h)
+- Finishing a first working version of the simulation without Agent communication. Agents now survive as
+	long as there are sufficient Resources in their environment. When there is scarcity or the 
+	Agents exhaust the Sources, they die. 
+- Redesigning some of the funtions to make them more efficient with respect to recent changes to the 
+	different classes
+
+Mo 4.5. (3h)
+- Implementing first functions for Agent communication. Agents may now request Resources that are not 
+	within their reach
+
+Tu 5.5. (4h)
+- Adding the transport of basic Resources. Agents may now also decide to extract a resource for one of 
+	their neighbors and deliver it to him.
+
+We 6.5. (9 1/2h)
+- Implementing a customized bar chart to visualise demand, supply, request and depletion of resources.
+	This was far more complicated than necessary and still may be optimized, but it gives a good
+	first idea about what is happening in the system.
+- Optimizing some functionalities to better make use of new forms of datastructures 
+- Commenting all new functionality
+
+
+
+

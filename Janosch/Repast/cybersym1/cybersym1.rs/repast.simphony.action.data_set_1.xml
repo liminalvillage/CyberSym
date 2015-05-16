@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>Data</name>
+  <name>Lifespan and Resources</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,25 +11,34 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>648751323</hashCode>
+    <hashCode>-973605966</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map">
     <entry>
-      <string>Resources</string>
+      <string>System Lifespan</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Resources</id>
-        <className>cybersym1.Source</className>
-        <methodName>getQuantity</methodName>
+        <id>System Lifespan</id>
+        <className>cybersym1.Agent</className>
+        <methodName>getRemainingTime</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>Life</string>
+      <string>Stored Resources</string>
       <repast.simphony.data2.engine.MethodDataSourceDefinition>
-        <id>Life</id>
+        <id>Stored Resources</id>
         <className>cybersym1.Agent</className>
-        <methodName>getRemainingTime</methodName>
+        <methodName>getNrResourcesInInventory</methodName>
+        <aggType>SUM</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
+    </entry>
+    <entry>
+      <string>Environment Resources</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Environment Resources</id>
+        <className>cybersym1.Source</className>
+        <methodName>getQuantity</methodName>
         <aggType>SUM</aggType>
       </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>

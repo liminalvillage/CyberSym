@@ -21,39 +21,36 @@ import repast.simphony.util.ContextUtils;
 
 /**
  * <h1>Agent</h1>
- * Instances of the Agent class are the actual agents in the CyberSym simulation. 
+ * 
+ * Instances of the Agent class represent the actual Agents of the CyberSym simulation. 
  * Agents generate demands and aim to fulfill them in order to increase their lifespan. When their
  * {@code remainingTime} runs out, they are removed from the grid. 
  * In order to fulfill their demands, agents can make use of different actions like extracting 
- * Resources from their Sources and delivering Resources to other agents. Actions can be determined 
- * by different intelligence and planning settings
+ * Resources from their Sources, delivering Resources to other agents or combining Resources to
+ * Products they can consume. Agents do not get a reward for completing these actions. 
+ * At the current state, actions are determined by a hardcoded preference setting.
  * 
- * @author Janosch Haber, 10400192
- * @date 37.04.2015
+ * @author Janosch Haber, 10400192, University of Amsterdam (UvA)
+ * @date 06-05-2015
  */
 public class Agent {
 	// Representation of the Environment (continuous + rasterized)
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
-	
+	GridPoint pt;	
 	// Items held by the individual Agent instance
 	private int remainingTime;
 	private Hashtable<Character,LinkedList<Resource>> resourceInventory;
-	private Hashtable<List<Character>,LinkedList<Product>> productInventory;
-	
+	private Hashtable<List<Character>,LinkedList<Product>> productInventory;	
 	// Information about the Agent's demands
 	private LinkedList<Character> demand;
 	private LinkedList<List<Character>> indirectPartDemand;
 	private Hashtable<Character, Integer> indirectResourceDemand;
-	
-	// Information about Resources in the Agent's neighborhood
-	private int nrAvailableSources;
-	private Hashtable<Character, List<Source>> availableResources;
-	private Set<Character> availableResourceTypes;
-	
+	private LinkedList<Character> resourceRequest;
+	private Set<Character> availableResourceTypes;	
 	// Information about other Agents in the neighborhood
-	private int nrReachableAgents;
 	private Set<Agent> reachableAgents;
+	private Hashtable<Character,LinkedList<Agent>> neighborResourceRequests;
 	
 	/**
 	 * Agent constructor
@@ -65,6 +62,7 @@ public class Agent {
 		this.space = space;
 		this.grid = grid;
 		this.remainingTime = lifespan;
+		this.resourceRequest = new LinkedList<Character>();
 		
 		resourceInventory = new Hashtable<Character,LinkedList<Resource>>();
 		productInventory = new Hashtable<List<Character>,LinkedList<Product>>();
@@ -72,142 +70,169 @@ public class Agent {
 		demand = CybersymBuilder.possibleProducts.get(RandomHelper.nextIntFromTo(0, 
 				CybersymBuilder.nrPossibleProducts-1));
 		generateIndirectDemand();
-		System.out.println("Agent Demand: " + getDemand());
+		//System.out.println("Agent Demand: " + getDemand());
 	}
 	
 	/**
-	 * Initializes the agent by evaluating its environment. This cannot be done in the
-	 * constructor as at that point in time not all agents in the environment are yet set.
+	 * Initializes the agent by evaluating its environment. (This cannot be done in the
+	 * constructor as at that point in time not all agents in the environment are yet set)
 	 */
 	public void initialize() {
-		GridPoint pt = grid.getLocation(this);
-		setAvailableResources(pt);
-		setReachableAgents(pt);
+		pt = grid.getLocation(this);
+		setReachableAgents();
 	}
 	
 	/**
 	 * Scheduled method to invoke the Agent's behavior. Evaluates the environment and
 	 * determines the individual agent's behavior. After each tick, the {@code remainingTime} 
-	 * of an agent is decreased by one
+	 * of an agent is decreased by one. If it reaches zero, the Agent "dies" and is removed from the
+	 * grid.
 	 */
 	@ScheduledMethod(start=1, interval=1)
 	public void step () {	
-		GridPoint pt = grid.getLocation(this);
-		setAvailableResources(pt);
-		setReachableAgents(pt);
-		
-		System.out.print("Agent Inventory: " + getNrResourcesInInventory() + " Resources and ");
-		System.out.println(getNrProductsInInventory() + " Products.");
-		determineAction();
+		setReachableAgents();		
+		//System.out.print("Agent Inventory: " + getNrResourcesInInventory() + " Resources and ");
+		//System.out.println(getNrProductsInInventory() + " Products.");
+		Hashtable<Character, LinkedList<Source>> availableResources = getAvailableResources(pt, true);
+		setResourceRequest();
+		//System.out.println("Agent needs " + resourceRequest.size() + " resources from other agents.");
+		determineAction(availableResources);
 		
 		remainingTime--;
 		if (remainingTime <= 0) {
+			CybersymBuilder.removeInventoryFromRegister(this.resourceInventory);
+			CybersymBuilder.removeArrayFromRegister(this.demand, "demand");
 			@SuppressWarnings("unchecked")
 			Context<Object> context = ContextUtils.getContext(this);
 			context.remove(this);
+			System.out.println("Agent died.");
 		}
 	}	
-	
+
 	/**
-	 * Interface for determining an individual Agent's next action
+	 * Interface for determining an individual Agent's next action.
+	 * At the current state, actions are determined by a hardcoded preference setting
+	 * @param availableResources The list of Resources that are available in the Agent's 
+	 * neighborhood and can be used to fulfill his demand
 	 */
-	public void determineAction() {
+	public void determineAction(Hashtable<Character, LinkedList<Source>> availableResources) {
 		//TODO: Interface for selection parameters / intelligence settings
 		
-		// OPTION 1: Extract a Resource from one of the sources in the neighborhood
-		List<Character> resourceDemand = new ArrayList<Character>(indirectResourceDemand.keySet());
-		if (!resourceDemand.isEmpty()) {
-			extractResource(resourceDemand.get(RandomHelper.nextIntFromTo(0, 
-					resourceDemand.size()-1)));
-			return;
+		
+		// OPTION 1: Consume a finished Product in order to increase the Agent's lifespan
+		if (consumeProduct()) return;
+		
+		// OPTION 2: Extract a Resource from one of the sources in the neighborhood		
+		if (!availableResources.isEmpty()) {
+			//System.out.println("There are " + availableResources.size() + " needed resources available.");
+			//System.out.println("Agent needs " + resourceRequest.size() + " resources from other agents.");
+			Character extractedResource = extractResource(availableResources);
+			if ( extractedResource != null) {
+				// Update resource demand
+				int oldAmount = indirectResourceDemand.get(extractedResource);
+				if (oldAmount == 1) {
+					indirectResourceDemand.remove(extractedResource);
+				} else {
+					indirectResourceDemand.put(extractedResource,oldAmount-1);
+				}		
+				return;
+			}
 		} 		
 		
-		// OPTION 2: Assemble a product from two basic Resources in the inventory
+		// OPTION 3: Assemble a product from two basic Resources in the inventory
 		List<Character> resourceSupply = new ArrayList<Character>(resourceInventory.keySet());	
 		//System.out.println(resourceSupply.size() + " different Resource Types present.");
 		LinkedList<List<Character>> possibleProducts =  generateCombinations(resourceSupply);
 		//System.out.print("Agent can generate "); System.out.print(possibleProducts.size()); 
 		//System.out.println(" possible partial products."); System.out.println(possibleProducts.toString());
 		if (!possibleProducts.isEmpty()) {
-			combineResources(possibleProducts);
-			return;
+			if (combineResources(possibleProducts))	return;
 		}
 
-		// OPTION 3: Add another basic Resource to a partial Product in the inventory
+		// OPTION 4: Add another basic Resource to a partial Product in the inventory
 		LinkedList<List<Character>> productSupply = getProductList();
 		possibleProducts = generateCombinations(resourceSupply, productSupply);
 		//System.out.print("Agent can assemble "); System.out.print(possibleProducts.size()); 
 		//System.out.println(" possible partial products."); System.out.println(possibleProducts.toString());		
 		if (!possibleProducts.isEmpty()) {
-			combinePartAndResource(possibleProducts);
-			return;
+			if (combinePartAndResource(possibleProducts)) return;
 		}
 		
-		// OPTION 4: Combine two partial Products TODO
-		HashMap<List<Character>, List<List<Character>>> possibleCombinations = generateCombinations(productSupply);
-		System.out.print("Agent can assemble "); System.out.print(possibleCombinations.size()); 
-		System.out.println(" possible partial products."); System.out.println(possibleCombinations.toString());	
+		// OPTION 5: Combine two partial Products 
+		HashMap<List<Character>, List<List<Character>>> possibleCombinations = 
+				generateCombinations(productSupply);
 		if (!possibleCombinations.isEmpty()) {
-			combineParts(possibleCombinations);
-			return;
+			if (combineParts(possibleCombinations)) return;
 		}
 		
-		// OPTION 5: Deliver a Resource to another Agent in the neighborhood TODO
-		
-		// OPTION 6: Consume a finished Product in order to increase the Agent's lifespan
-		if (consumeProduct()) {
-			return;
+		// OPTION 6: Deliver a requested Resource to another Agent in the neighborhood
+		setNeighborResourceRequest();
+		Set<Character> requestedResources = neighborResourceRequests.keySet();
+		Hashtable<Character,LinkedList<Agent>> potentialReceivers = 
+				new Hashtable<Character,LinkedList<Agent>>();
+		for (char resource : requestedResources) {
+			if (resourceInventory.containsKey(resource)) {
+				potentialReceivers.put(resource, neighborResourceRequests.get(resource));
+			}
+		}	
+		if (!potentialReceivers.isEmpty()) {
+			List<Character> keySet = new ArrayList<Character>(potentialReceivers.keySet());
+			char resourceType = keySet.get(RandomHelper.nextIntFromTo(0, keySet.size()-1));
+			Resource resource = getFromInventory(resourceType);
+			LinkedList<Agent> receivers = potentialReceivers.get(resourceType);
+			Agent receiver = receivers.get(RandomHelper.nextIntFromTo(0,receivers.size()-1));
+			if (deliverResource(resource, receiver)) return;
 		}
+				
+		//OPTION 7: Extract a Resource requested by an Agent from the neighborhood
+		availableResources = getAvailableResources(pt, false);
+		//System.out.println("Agent can get " + availableResources.size() + " resources for other Agents.");
+		if (!availableResources.isEmpty()) {
+			//System.out.println("Extracting a resource for a neighbor.");
+			if (extractResource(availableResources) != null) return;
+		}	
 	}
 	
-	// ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %%
+	// XXX ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %% ACTIONS %%
 	
 	/**
 	 * Attempts to extract a demanded resource from the Sources in the environment. If it is 
 	 * successful, a Resource object is created and added to the agent's resource inventory. The 
 	 * cost of extracting the resource is subtracted from the agent's remaining lifespan.
 	 * 
-	 * @param demand A {@code char} representation of the demanded resource
+	 * @param availableResources A Hashtable with Resource demands and the available Sources thereof
 	 * @return true if the resource could be extracted, false otherwise
 	 */
-	private boolean extractResource(char demand) {
-		//TODO! Chooses Source randomly. Implement interface to determine choice.
-		
-		List<Source> availableSources = availableResources.get(demand);
-		if (availableSources != null) {
-			int max = availableSources.size()-1;
-			Source source = availableSources.get(RandomHelper.nextIntFromTo(0, max));
-			NdPoint spacePtSource = space.getLocation(source);
-			NdPoint spacePtAgent = space.getLocation(this);
-			
-			int extractingCost = calculateDistance((int)spacePtSource.getX(), 
-					(int)spacePtSource.getY(),(int)spacePtAgent.getX(), (int)spacePtAgent.getY());
-			if (remainingTime >= extractingCost) {
-				Resource extractedResource = source.extractResource();
-				extractedResource.increaseValue(extractingCost);
-				remainingTime-=extractingCost;				
-				addToInventory(extractedResource);		
-				
-				System.out.print("Mined resource ");				
-				System.out.println(extractedResource.getResourceType());	
+	private Character extractResource(Hashtable<Character, LinkedList<Source>> availableResources) {
+		//TODO! Chooses Resource and Source randomly. Implement interface to determine choice.
+		List<Character> keySet = new ArrayList<Character>(availableResources.keySet());
+		char resource = keySet.get(RandomHelper.nextIntFromTo(0,keySet.size()-1));
+		LinkedList<Source> availableSources = availableResources.get(resource);
+		Source source = availableSources.get(
+				RandomHelper.nextIntFromTo(0,availableSources.size()-1));
 
-				// TODO Move out of here ?!
-				// Update resource demand
-				int oldAmount = indirectResourceDemand.get(extractedResource.getResourceType());
-				if (oldAmount == 1) {
-					indirectResourceDemand.remove(extractedResource.getResourceType());
-				} else {
-					indirectResourceDemand.put(extractedResource.getResourceType(),oldAmount-1);
-				}		
-				return true;
-			} 
-		} 
+		NdPoint spacePtSource = space.getLocation(source);
+		NdPoint spacePtAgent = space.getLocation(this);
+		Character extractedResourceType = null;
+			
+		int extractingCost = calculateDistance((int)spacePtSource.getX(), 
+				(int)spacePtSource.getY(),(int)spacePtAgent.getX(), (int)spacePtAgent.getY());
+		if (remainingTime >= extractingCost) {
+			Resource extractedResource = source.extractResource();
+			extractedResource.increaseValue(extractingCost);
+			remainingTime-=extractingCost;				
+			addToInventory(extractedResource);		
+			extractedResourceType = extractedResource.getResourceType();
+			
+			//System.out.println("Extracted resource " + extractedResource.getResourceType());	
+			return extractedResourceType;
+		} 		
 		System.out.println("ERROR: COULD NOT EXTRCT RESOURCE!");
-		return false;
+		return extractedResourceType;
 	}
 	
 	/**
-	 * Attempts to combine two of the basic Resources that an Angent holds to create an intermediate
+	 * Attempts to combine two of the basic Resources that an Agent holds to create an intermediate
 	 * Product part.
 	 * 
 	 * @param possibleProducts A {@code LinkedList<List<Character>>} representation of possible
@@ -233,8 +258,7 @@ public class Agent {
 				addToInventory(newPart);
 				remainingTime-= newPart.getInitialAssemblyCost();
 				
-				System.out.print("Assembled product ");
-				System.out.println(newPart.getProduct().toString());
+				//System.out.println("Assembled product " + newPart.getProduct().toString());
 				return true;
 			}
 		} 
@@ -263,7 +287,7 @@ public class Agent {
 		char resource = chosenPart.get(0);
 		List<Character> part = chosenPart.subList(1, chosenPart.size());	
 		if (isInInventory(part) && isInInventory(resource)) {
-			System.out.println("Add resource to front");
+			//System.out.println("Add resource to front");
 			front = true;	
 			product = getFromInventory(part);
 			resourceSupply = getFromInventory(resource);
@@ -272,7 +296,7 @@ public class Agent {
 			part = chosenPart.subList(0, chosenPart.size()-1);
 			resource = chosenPart.get(chosenPart.size()-1);
 			if (isInInventory(part) && isInInventory(resource)) {
-				System.out.println("Add resource to back");
+				//System.out.println("Add resource to back");
 				front = false;	
 				product = getFromInventory(part);
 				resourceSupply = getFromInventory(resource);
@@ -282,7 +306,7 @@ public class Agent {
 		if (resourceSupply != null && product != null) {
 			remainingTime-= product.addResource(resourceSupply, front);
 			addToInventory(product);
-			System.out.println("Added Resource to Product part.");
+			//System.out.println("Added Resource to Product part.");
 			return true;			
 		} 
 		System.out.println("ERROR: COULD NOT COMBINE PRODUCT AND RESOURCE!");
@@ -290,16 +314,19 @@ public class Agent {
 	}
 	
 	/**
-	 * Adds a second part to the back of an existing product.
+	 * Adds a second partial Product to the back of an existing product.
+	 * 
 	 * @param possibleCombinations A {@code HashMap<List<Character>, List<List<Character>>>} holding 
 	 * a list representation of the possible products as Key and a list of necessary product parts 
 	 * as value
 	 * @return True if the parts could be combined, false otherwise
 	 */
-	public boolean combineParts(HashMap<List<Character>, List<List<Character>>> possibleCombinations) {
+	public boolean combineParts(HashMap<List<Character>, List<List<Character>>> 
+				possibleCombinations) {
 		
 		//TODO: Random Selection. Implement interface to determine choice.		
-		List<List<Character>> keySet = new ArrayList<List<Character>>(possibleCombinations.keySet());
+		List<List<Character>> keySet = 
+				new ArrayList<List<Character>>(possibleCombinations.keySet());
 		List<Character> randomKey = keySet.get(RandomHelper.nextIntFromTo(0,keySet.size()-1));		
 		
 		List<List<Character>> ingredients = possibleCombinations.get(randomKey);
@@ -327,28 +354,39 @@ public class Agent {
 			
 			// Consume the product to fulfill the demand (destroys it)
 			getFromInventory(demand);
-			remainingTime+=demand.size()*10;		
-			System.out.println("Demand fulfilled !");
-			
+			remainingTime+=demand.size()*100;		
+			System.out.println("Demand fulfilled!");
+			CybersymBuilder.removeArrayFromRegister(demand, "demand");
 			// Generate a new random demand
 			demand = CybersymBuilder.possibleProducts.get(RandomHelper.nextIntFromTo(0, 
 					CybersymBuilder.nrPossibleProducts-1));
-			System.out.println("New Agent Demand: " + getDemand());
+			//System.out.println("New Agent Demand: " + getDemand());
 			generateIndirectDemand();	
 			return true;
 		} else return false;
 	}
 	
 	/**
-	 * Attempts to deliver a resource demanded by an other Agent in the environment to it.
-	 * @param resourceToBring The demanded resources that can be supplied by this Agent
-	 * @param receiver The agent who demanded for a resource
+	 * Attempts to deliver a resource requested by an other Agent in the neighborhood
+	 * @param resource The requested Resource that can be supplied by this Agent
+	 * @param receiver The agent who requested the Resource
 	 */
-	public void deliverResource(Resource resourceToBring, Agent receiver) {
-		//TODO! Stub.
+	public boolean deliverResource(Resource resource, Agent receiver) {
+		NdPoint spacePtReceiver = space.getLocation(receiver);
+		NdPoint spacePtAgent = space.getLocation(this);
+			
+		int deliveryCost = calculateDistance((int)spacePtReceiver.getX(), 
+				(int)spacePtReceiver.getY(),(int)spacePtAgent.getX(), (int)spacePtAgent.getY());
+		if (remainingTime >= deliveryCost) {
+			resource.increaseValue(deliveryCost);
+			receiver.addToInventory(resource);
+			remainingTime-= deliveryCost;
+			//System.out.println("Delivered a Resource.");
+			return true;
+		} else return false;
 	}
 	
-	// GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %%
+	// XXX GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %% GETTER FUNTIONS %%		
 	
 	/**
 	 * Returns a {@code Product} from the inventory that matches the List representation in query.
@@ -386,6 +424,7 @@ public class Agent {
 				if (!supply.isEmpty()) {
 					resourceInventory.put(query,supply);
 				}
+				CybersymBuilder.removeFromRegister(query, "supply");
 				return resource;
 			}
 		} 
@@ -419,15 +458,6 @@ public class Agent {
 	}
 	
 	/**
-	 * Returns a {@code Set<Character>} of the different Resource types that are 
-	 * available to an Agent through the Sources in its environment
-	 * @return	A {@code Set<Character>} of the different available Resource types
-	 */
-	public Set<Character>getAvailableResourceTypes() {	
-		return availableResources.keySet();	
-	}
-	
-	/**
 	 * Returns the {@code remainingTime} of an individual Agent
 	 * @return The {@code remainingTime} of an individual Agent
 	 */
@@ -443,7 +473,67 @@ public class Agent {
 		return new LinkedList<List<Character>>(productInventory.keySet());	
 	}
 	
-	// HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %%
+	/**
+	 * Returns the set of Resource Types available to the Agent through Sources in his neighborhood
+	 * @return The set of Resource Types available to the Agent through Sources in his neighborhood
+	 */
+	public Set<Character> getAvailableResourceTypes() {
+		return availableResourceTypes;
+	}
+	
+	/**
+	 * Returns a list of the Resources that an individual Agents requests from other Agents in his 
+	 * neighborhood since he cannot extract it himself
+	 * @return  A list of the Resources that an individual Agents requests from other Agents
+	 */
+	public LinkedList<Character> getResourceRequest() {
+		return resourceRequest;
+	}
+	
+	// XXX HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %% HELPER FUNTIONS %%
+	
+	/**
+	 * Checks the Agent's demand against the available Sources and generates a request list for all
+	 * Resources he cannot extract himself;
+	 */
+	public void setResourceRequest() {
+		resourceRequest = new LinkedList<Character>();
+		
+		List<Character> demand = new ArrayList<Character>(indirectResourceDemand.keySet());	
+		List<Character> avResOwnDemand = new ArrayList<Character>(getAvailableResourceTypes());
+		for (char item : demand) {
+			if(!avResOwnDemand.contains(item)) {
+				int amount = indirectResourceDemand.get(item);
+				for (int i=0; i<amount; i++) {
+					resourceRequest.add(item);
+					CybersymBuilder.addToRegister(item, "request");
+				}
+			}
+		}		
+	}
+	
+	/**
+	 * Evaluates the resource demand of Agents in the neighborhood. Sets the Agents field 
+	 * {@code neighborResourceRequests} with a Hashtable containing the Resource {@code char} as key
+	 * and a linked list of Agents requesting that Resource.
+	 */
+	public void setNeighborResourceRequest() {
+		neighborResourceRequests = new Hashtable<Character,LinkedList<Agent>>();
+		for (Agent agent : reachableAgents) {
+			LinkedList<Character> request = agent.getResourceRequest();
+			for (char resource : request) {
+				if (neighborResourceRequests.containsKey(resource)) {
+					 LinkedList<Agent> callers = neighborResourceRequests.get(resource);
+					 callers.add(agent);
+					 neighborResourceRequests.put(resource, callers);
+				} else {
+					LinkedList<Agent> callers = new LinkedList<Agent>();
+					callers.add(agent);			
+					neighborResourceRequests.put(resource, callers);
+				}
+			}
+		}
+	}	
 	
 	/**
 	 * Adds a Resource to the {@code resourceInventory}
@@ -455,10 +545,12 @@ public class Agent {
 			LinkedList<Resource> supply = resourceInventory.get(key);
 			supply.add(newResource);
 			resourceInventory.put(key,supply);
+			CybersymBuilder.addToRegister(key, "supply");
 		} else {
 			LinkedList<Resource> newSupply = new LinkedList<Resource>();
 			newSupply.add(newResource);
 			resourceInventory.put(key,newSupply);
+			CybersymBuilder.addToRegister(key, "supply");
 		}
 	}
 	
@@ -528,7 +620,8 @@ public class Agent {
 	 * 
 	 * @param inventory A list of the {@code char} representation of the available Resources
 	 * @param parts A list of lists of the {@code char} representation of available partial Products
-	 * @return
+	 * @return A list of the possible combinations of basic resources and available partial Products 
+	 * that can be used in the demanded product
 	 */
 	public LinkedList<List<Character>> generateCombinations(List<Character> inventory, 
 			LinkedList<List<Character>> parts) {
@@ -590,18 +683,15 @@ public class Agent {
 	}
 	
 	/**
-	 * Returns a {@code Set} of other Agents that are in the Agent's neighborhood   
-	 * @param pt The location of the Agent whose neighborhood is evaluated
-	 * @return A {@code Set<Agent>} containing all the Agents in the neighborhood
+	 * Sets an Agent's field {@code reachableAgents} to a set of other Agents that are in the
+	 * Agent's neighborhood   
 	 */
-	public void setReachableAgents(GridPoint pt) {
-	
-		GridCellNgh<Agent> nghCreatorAgents = new GridCellNgh<Agent>(grid,pt,Agent.class,10,10);
+	public void setReachableAgents() {	
+		GridCellNgh<Agent> nghCreatorAgents = new GridCellNgh<Agent>(grid,pt,Agent.class,
+				CybersymBuilder.agentScopeAgents,CybersymBuilder.agentScopeAgents);
 		List<GridCell<Agent>> closeAgents = nghCreatorAgents.getNeighborhood(true);
 		reachableAgents = new HashSet<Agent>();
-		nrReachableAgents = 0;
 		for (GridCell<Agent>cell : closeAgents) {
-			nrReachableAgents+=cell.size();
 			for (Agent agent : cell.items()) {
 				reachableAgents.add(agent);
 			}
@@ -609,36 +699,49 @@ public class Agent {
 	}
 	
 	/**
-	 * Sets the individual Agent's available Resources (from Sources only)
+	 * Either checks the individual Agent's indirect Resource demand against the Sources that are 
+	 * available (if {@code self} is true) or checks whether the agent can extract Resources 
+	 * requested by neighboring Agents.
+	 * 
 	 * @param pt The location of the Agent whose environment is evaluated
+	 * @param self True if the list should contain Resources demand by the Agent himself, false if
+	 * the Agent should check for Resources demanded by neighboring Agents.
+	 * @return A {@code Hashtable<Character, List<Source>>} of the available Resources and their 
+	 * respective Sources.
 	 */
-	public void setAvailableResources(GridPoint pt) {				
-		GridCellNgh<Source> nghCreatorSources = new GridCellNgh<Source>(grid,pt,Source.class,10,10);
-		List<GridCell<Source>> closeSources = nghCreatorSources.getNeighborhood(true);
-		availableResources = new Hashtable<Character, List<Source>>();
-		nrAvailableSources = 0; 		
+	public Hashtable<Character, LinkedList<Source>> getAvailableResources(GridPoint pt, boolean self) {	
+		Hashtable<Character, LinkedList<Source>> availableResources = 
+				new Hashtable<Character, LinkedList<Source>>();
+		GridCellNgh<Source> nghCreatorSources = new GridCellNgh<Source>(grid,pt,Source.class,
+				CybersymBuilder.agentScopeSources,CybersymBuilder.agentScopeSources);
+		List<GridCell<Source>> closeSources = nghCreatorSources.getNeighborhood(true);		
+	
 		for (GridCell<Source> cell : closeSources) {
-			nrAvailableSources+=cell.size();
 			for (Source source : cell.items()) {
 				char resource = source.getResourceType();
-				
-				if (availableResources.containsKey(resource)) {
-					List<Source> sources = availableResources.get(resource);
-					sources.add(source);
-					availableResources.put(resource, sources);
-				} else {
-					List<Source> sources = new ArrayList<Source>(); 
-					sources.add(source);
-					availableResources.put(resource, sources);
+				if (self && indirectResourceDemand.containsKey(resource) || 
+						!self && neighborResourceRequests.containsKey(resource)) { 			
+					if (availableResources.containsKey(resource)) {
+						LinkedList<Source> sources = availableResources.get(resource);
+						sources.add(source);
+						availableResources.put(resource, sources);
+					} else {
+						LinkedList<Source> sources = new LinkedList<Source>(); 
+						sources.add(source);
+						availableResources.put(resource, sources);
+					}
 				}
 			}
 		}
-		availableResourceTypes = getAvailableResourceTypes();
+		if (self) {
+			availableResourceTypes = availableResources.keySet(); 
+		}
+		return availableResources;
 	}	
 	
 	/**
 	 * Generates the indirect demand of an Agent given its Product demand. Indirect demand is 
-	 * divided in indirect demand for other Product parts and indirect demand for (minable) basic
+	 * divided in indirect demand for other Product parts and indirect demand for basic
 	 * Resources.
 	 */
 	public void generateIndirectDemand() {
@@ -660,9 +763,11 @@ public class Agent {
 	        		char resource = sub.get(0);
 	        		if (indirectResourceDemand.get(resource) == null) {
 	        			indirectResourceDemand.put(resource, 1);
+	        			CybersymBuilder.addToRegister(resource, "demand");
 	        		} else {
 	        			int oldCount = indirectResourceDemand.get(resource);
 	        			indirectResourceDemand.put(resource, oldCount+1);
+	        			CybersymBuilder.addToRegister(resource, "demand");
 	        	    }
 	            }	         
 	        }
@@ -684,7 +789,7 @@ public class Agent {
 				Math.pow(( CybersymBuilder.gridHeight - p2Y - p1Y), 2)));
 	}
 	
-	// VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %%
+	// XXX VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %% VISUALIZATION TOOLS %%
 	
 	/**
 	 * Returns a {@code String} representation of the agent's demand 
@@ -703,20 +808,7 @@ public class Agent {
 	 * @return a String to be printed on the Agent's label in the simulation visualization
 	 */
 	public String getLabel(){
-		//TODO! Make interface to alter options.
-		String label = "T:";
-		label+= String.valueOf(this.remainingTime);
-		
-		label+= " D:";
-		label+= getDemand();
-		
-		if (availableResourceTypes != null) {
-			label+= " R:";
-			label+= String.valueOf(this.nrAvailableSources);
-		}
-		
-		label+= " A:";
-		label+= String.valueOf(this.nrReachableAgents);
+		String label = "T:" + String.valueOf(this.remainingTime) + " D:" + getDemand();
 		return label;
 	}
 }

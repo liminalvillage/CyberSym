@@ -8,17 +8,18 @@ import repast.simphony.util.ContextUtils;
 
 /**
  * <h1>Source</h1>
- * Instances of the Source class represent sources of basic resources in the environment. 
- * Sources have a limited capacity and may or may not regenerate. They produce a single resource which can be extracted 
- * by Agents in the Source's neighborhood. If the capacity of a Source is depleted, the Source is exhausted and cannot
- * regenerate any longer. It then is removed from the map. 
  * 
- * @author Janosch Haber, 10400192
- * @date 37.04.2015
+ * Instances of the Source class represent Sources of basic Resources in the environment. 
+ * Sources have a limited capacity and may or may not regenerate. They produce a single resource 
+ * type which can be extracted by Agents in the Source's neighborhood. If the capacity of a Source 
+ * is depleted, the Source is exhausted and cannot regenerate any longer. It then is removed from 
+ * the grid. 
+ * 
+ * @author Janosch Haber, 10400192, University of Amsterdam (UvA)
+ * @date 06-05-2015
  */
 public class Source {
-	// Representation of the Environment (continuous + rasterized)
-	
+	// Representation of the Environment (continuous + rasterized)	
 	@SuppressWarnings("unused")
 	private ContinuousSpace<Object> space;
 	@SuppressWarnings("unused")
@@ -68,6 +69,24 @@ public class Source {
 	}
 	
 	/**
+	 * Extracts one resource unit from the Source. By doing so, a Resource instance is created and passed 
+	 * to the mining Agent. If the source is exhausted, it is removed from the environment.
+	 * @return The extracted Resource instance
+	 */
+	public Resource extractResource() {
+		Resource extractedResource = new Resource(0, this.getResourceType());
+		this.quantity--;
+		if (quantity == 0) {
+			CybersymBuilder.addToRegister(this.getResourceType(), "deplete");
+			@SuppressWarnings("unchecked")
+			Context<Object> context = ContextUtils.getContext(this);
+			context.remove(this);
+			System.out.println("Source for " + this.getResourceType() + " depleted.");
+		}
+		return extractedResource;
+	}
+	
+	/**
 	 * Returns the resource that can be extracted from this Source
 	 * @return The {@code char} resource that can be extracted from this Source
 	 */
@@ -77,36 +96,18 @@ public class Source {
 	
 	/**
 	 * Returns the current individual Source's contingent
-	 * @return The current individual Source's contingent in number of units (int)
+	 * @return The current individual Source's contingent in number of units ({@code Integer})
 	 */
 	public int getQuantity() {
 		return this.quantity;
-	}
+	}	
 	
 	/**
-	 * Extracts one resource unit from the Source. By doing so, a Resource instance is created and passed 
-	 * to the mining Agent. If the source is exhausted, it is removed from the environment.
-	 * @return The extracted Resource instance
-	 */
-	public Resource extractResource() {
-		Resource extractedResource = new Resource(0, getResourceType());
-		this.quantity--;
-		if (quantity == 0) {
-			@SuppressWarnings("unchecked")
-			Context<Object> context = ContextUtils.getContext(this);
-			context.remove(this);
-		}
-		return extractedResource;
-	}
-	
-	/**
-	 * Returns the Source's resource type and quantity for the visualization
+	 * Returns the Source's Resource type and quantity for the visualization
 	 * @return String
 	 */
 	public String getLabel(){
-		String result = String.valueOf(this.resource);
-		result+=" - ";
-		result+=String.valueOf(this.getQuantity());
-		return result;
+		String label = String.valueOf(this.resource) + " - " + String.valueOf(this.getQuantity());
+		return label;
 	}
 }

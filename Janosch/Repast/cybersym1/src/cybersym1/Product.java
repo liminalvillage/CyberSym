@@ -4,14 +4,16 @@ import java.util.LinkedList;
 
 /**
  * <h1>Product</h1>
+ * 
  * Representation of a compound product that was assembled from at least two separate parts.
  * Products can be extended, transported and possibly consumed (if fulfilling a demand).
  * 
- * @author Janosch Haber, 10400192
- * @date 30.04.2015
+ * @author Janosch Haber, 10400192, University of Amsterdam (UvA)
+ * @date 06-05-2015
  */
 public class Product {
 
+	// A Product's features
 	private LinkedList<Character> product;
 	private int initialAssemblyCost;
 	private int value;

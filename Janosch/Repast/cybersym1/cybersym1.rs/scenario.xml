@@ -6,4 +6,5 @@
 <repast.simphony.action.display context="cybersym1" file="repast.simphony.action.display_3.xml" />
 <repast.simphony.action.time_series_chart context="cybersym1" file="repast.simphony.action.time_series_chart_4.xml" />
 <repast.simphony.action.time_series_chart context="cybersym1" file="repast.simphony.action.time_series_chart_5.xml" />
+<repast.simphony.action.time_series_chart context="cybersym1" file="repast.simphony.action.time_series_chart_6.xml" />
 </Scenario>

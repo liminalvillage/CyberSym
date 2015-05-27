@@ -30,4 +30,16 @@ tue 12-5: 	6h other course, 2h programming
 wed 13-5:	7h other course
 thu 14-5:	-
 fri 15-5:	-
+sat 16-5:	3h other course, 5,5h programming
+sun 17-5:	-
+mon 18-5:	7h programming
+tue 19-5:	3,5h programming, 1,5h meeting
+wed 20-5:	4h other course, 9h programming ...
+thu 21-5:	3h programming
+fri 22-5:	10h other course
+sat 23-5:	-
+sun 24-5:	-
+mon 25-5:	-
+tue 26-5:	2h Academic English, 4,5h programming 
+wed 27-5:	6h programming, 2,5h meeting, 1h presentation
 

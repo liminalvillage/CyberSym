@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.List;
 
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
@@ -41,14 +43,19 @@ import repast.simphony.space.grid.WrapAroundBorders;
 public class CybersymBuilder implements ContextBuilder<Object> {
 	
 	// The dimensions of the simulation environment. Passed from the simulation GUI
-	public static int gridWidth;
-	public static int gridHeight;	
+	private static int gridWidth;
+	private static int gridHeight;	
 	// A list of all the products that may be demanded by the Agents in the simulation
-	public static HashMap<Integer,LinkedList<Character>> possibleProducts;	
-	public static int nrPossibleProducts;
+	public static HashMap<Integer,ArrayList<Character>> possibleProducts;	
+	private static int nrPossibleProducts;
 	// Agent settings passed from the simulation GUI
-	public static int agentScopeSources;
-	public static int agentScopeAgents;
+	private static int agentScopeSources;
+	private static int agentScopeAgents;
+	private static int ticksPerDay;
+	private static int maxWorkloadPerDay;
+	private static int requirementNewDemand;
+	private static int deadlinePeriod;
+	private static int agentCount;
 	// Records of system behavior for statistical system analysis and evaluation 
 	public static Hashtable<Character,Integer> letterDemandRegister;
 	public static Hashtable<Character,Integer> letterSupplyRegister;
@@ -56,7 +63,7 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 	public static Hashtable<Character,Integer> letterDepletionRegister;
 	/// Additional graph TODO: Needs to be integrated in the Repast simulation environment
 	public static Histogram resourceStatistics;
-
+	
 	/**
 	 * Initiates the entire simulation
 	 */
@@ -80,11 +87,6 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 		String fileName = params.getValueAsString("file_name");
 		readFile(fileName);		
 		
-		//TODO: Enable the miningNetwork
-		//NetworkBuilder<Object>netBuilder = new NetworkBuilder<Object>
-		//	("miningNetwork", context, true);
-		//netBuilder.buildNetwork();
-		
 		// Generate a continuous environment representation space
 		ContinuousSpaceFactory spaceFactory=
 				ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
@@ -102,12 +104,13 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 		// Invoke the Agents
 		agentScopeSources = (Integer)params.getValue("scope_sources");
 		agentScopeAgents = (Integer)params.getValue("scope_agents");
-		int AgentCount = (Integer)params.getValue("agent_count");
-		int minLifespan = (Integer)params.getValue("min_lifespan");
-		int maxLifespan = (Integer)params.getValue("max_lifespan");
-		for (int i = 0; i < AgentCount; i++) {
-			int lifespan = RandomHelper.nextIntFromTo(minLifespan, maxLifespan);
-			context.add(new Agent(space, grid, lifespan));
+		agentCount = (Integer)params.getValue("agent_count");
+		ticksPerDay = (Integer)params.getValue("ticks_day");
+		requirementNewDemand = (Integer)params.getValue("requirement_demand");
+		deadlinePeriod = (Integer)params.getValue("without_consume");
+		maxWorkloadPerDay = (Integer)params.getValue("max_workload");
+		for (int i = 0; i < agentCount; i++) {
+			context.add(new Agent(grid));
 		}		
 		// Invoke the Sources
 		int SourceCount = (Integer)params.getValue("source_count");
@@ -119,7 +122,7 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 			int initialQuantity = RandomHelper.nextIntFromTo(minQuantity, maxQuantity);
 			int regenerationPeriod = RandomHelper.nextIntFromTo(minRegeneration, maxRegeneration);
 			char resource = (char)RandomHelper.nextIntFromTo(65, 90);
-			context.add(new Source(space, grid, initialQuantity, regenerationPeriod, resource));
+			context.add(new Source(grid, initialQuantity, regenerationPeriod, resource));
 		}		
 		// "Physically" place all objects in the environment representation 
 		for (Object obj : context) {
@@ -131,13 +134,15 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 			if (obj.getClass() == Agent.class) {
 				((Agent) obj).initialize();
 			}
-		}		
+		}			
 		
 		// Invoke the additional graph window
 		if (params.getValueAsString("show_histogram").equals("yes")) {
 			resourceStatistics = new Histogram();
 			context.add(resourceStatistics);
 		}
+		
+		context.add(new Evaluation());
 		return context;
 	}
 	
@@ -148,10 +153,10 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 	 */
 	public void readFile(String fileName) {
 		//TODO: Make more robust
-		possibleProducts = new HashMap<Integer,LinkedList<Character>>();
+		possibleProducts = new HashMap<Integer,ArrayList<Character>>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-			LinkedList<Character> product = new LinkedList<Character>();
+			ArrayList<Character> product = new ArrayList<Character>();
 			int input;
 			int counter = 0;
 			while((input = reader.read()) != -1){
@@ -160,7 +165,7 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 				} else {
 					possibleProducts.put(counter,product);
 					counter++;
-					product = new LinkedList<Character>();
+					product = new ArrayList<Character>();
 				}
 			}
 			possibleProducts.put(counter++,product);
@@ -191,7 +196,28 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 				register.put(letter, 1);
 			}
 			writeToRegister(registerName, register);			
-		} 
+		} else System.out.println("ERROR: Statistical Record not found!");
+	}
+	
+	/**
+	 * Adds an array of arrayed Resources to the statistical register
+	 * @param array an array of arrayed Resources
+	 * @param registerName The String name of the register (array, supply, request or deplete)
+	 */
+	public static void addArrayToRegister(List<Character> array, String registerName) {
+		Hashtable<Character,Integer> register = selectRegister(registerName);
+		if (register != null) {
+			for (char letter : array) {			
+				if (register.containsKey(letter)) {
+					int count = register.get(letter);
+					int newCount = count+1;
+					register.put(letter, newCount);
+				} else {
+					register.put(letter, 1);
+				}
+				writeToRegister(registerName, register);
+			} 
+		} else System.out.println("ERROR: Statistical Record not found!");
 	}
 	
 	/**
@@ -212,7 +238,7 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 				}
 			} 
 			writeToRegister(registerName, register);
-		} 
+		} else System.out.println("ERROR: Statistical Record not found!");
 	}
 	
 	/**
@@ -220,10 +246,10 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 	 * @param array A {@code LinkedList} of letters that are to be removed from the given register
 	 * @param registerName The register Name from which the letters should be removed
 	 */
-	public static void removeArrayFromRegister(LinkedList<Character> array, String registerName) {
+	public static void removeArrayFromRegister(ArrayList<Character> array, String registerName) {
 		Hashtable<Character,Integer> register = selectRegister(registerName);
-		for (char letter : array) {
-			if (register != null) {
+		if (register != null) {
+			for (char letter : array) {
 				if (register.containsKey(letter)) {
 					int count = register.get(letter);				
 					if (count > 1) {
@@ -234,8 +260,8 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 					}
 				}
 				writeToRegister(registerName, register);
-			} 
-		}
+			}			
+		} else System.out.println("ERROR: Statistical Record not found!");
 	}
 	
 	/**
@@ -285,7 +311,43 @@ public class CybersymBuilder implements ContextBuilder<Object> {
 			case "deplete": letterDepletionRegister = register;	break;
 		}			
 	}
+	
+	public static int getNrPossibleProducts() {
+		return nrPossibleProducts;
+	}
+	
+	public static int getAgentScopeSources() { 
+		return agentScopeSources;
+	}
+	
+	public static int getAgentScopeAgents () { 
+		return agentScopeAgents;
+	}
+	
+	public static int getTicksPerDay() { 
+		return ticksPerDay;
+	}
+	
+	public static int getMaxWorkloadPerDay() { 
+		return maxWorkloadPerDay;
+	}
+	
+	public static int getRequirementNewDemand() { 
+		return requirementNewDemand;
+	}
+	
+	public static int getDeadlinePeriod() { 
+		return deadlinePeriod;
+	}
+	
+	public static int getAgentCount () { 
+		return agentCount;
+	}
+	
+	
 }
+
+
 
 
 

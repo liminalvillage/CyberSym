@@ -1,17 +1,21 @@
-Logbook
+						Logbook Bachelor's project 2015 - Cybersym Part I
+
+										Janosch Haber
+								  University of Amsterdam
+										  10400192
 
 Mo 30.3. (2h)
 - Attending Introductary lecture of the Bachelor's project phase (Bredeweg/van Someren)
 
-Fr 3.4. (6h)
+Fr 03.4. (6h)
 - Writing and submitting tender applications to the CyberSym and Cyberfarming projets offered by 
 	Roberto Valenti (Assignment 1). 
 - Summarizing the ideas and determining the research types of these two projects (Assignment 2).
 
-We 8.4. (2h)
--Attending a lecture about the overall criteria for writing academic papers (van Someren)
+We 08.4. (2h)
+- Attending a lecture about the overall criteria for writing academic papers (van Someren)
 
-Th 9.4. (6h)
+Th 09.4. (6h)
 - First meeting with Roberto and Quiri; Trying to find two equally demanding aspects in order to
 	split the project in two parts and delimit the individual projects - this however fails 
 	and it is agreed to try to find suitable projects in the course of the next week.
@@ -20,10 +24,10 @@ Th 9.4. (6h)
 
 Mo 13.4. (5h)
 - Lecture about non-consistent logics (van Rooij) and differences in AI research (van Someren)
-- Meeting with Quiri; Trying to distinguish two equal projects based on our ideas about the problem 
-	domain; We however get more and more concerned about the AI-factor of the projet and agree  
-	to spend one more day to try to find suitable projects. I contact Bert Bredeweg and Auke  
-	Wiggers for more info on the BSc project and MAS, respectively
+- Meeting with Quiri; Trying to distinguish two equal projects based on our interpretations of the 
+	problem domain; We however get more and more concerned about the AI-aspect of the projet and  
+	agree to spend one more day to try to find suitable projects. I contact Bert Bredeweg and 
+	Auke Wiggers for more info on the BSc project and MAS, respectively
 
 Tu 14.4. (8h)
 - Searching for papers about the CyberSyn project, AAs and MAS; Reading several pieces and trying 
@@ -36,17 +40,18 @@ Tu 14.4. (8h)
 
 We 15.4. (5h)
 - Meeting with Quiri and later with Quiri and Roberto. Elaborating the proposed research 
-	directeion and trying to further separate our research questions. New approach: Quiri takes 
-	the Venus Project and I will focus on the CyberSyn Project. Problem: On lower levels, they 
-	will be quite identical. I don't know whether I will reach the recursion level - So we have 
-	to work that out some more.
+	directions and trying to further separate our research questions. New approach: Quiri takes 
+	the Venus Project and I will focus on the CyberSyn Project. One problem with that: On lower 
+	levels, these projects will be quite identical. If I don't reach the recursion level of the 
+	Cybersyn approach, our projects will actually just tackle the same issue from two different 
+	points of interpretation.
 - Reading some more papers and downloading MASON and NetBeans
 
 Th 16.4. (8h)
-- Reading some more papers and dowloading some additional ones
+- Reading some more papers and dowloading some additional new ones
 - Setting up MASON and NetBeans, compiling and running a first tutorial program - but then NetBeans 
-	crashes and destroys the entire directory. Clean remove of everything - starting over with 
-	MASON and Intellij.
+	crashes and destroys the entire directory. Clean remove and starting all over with MASON and
+	Intellij.
 
 Fr 17.4. (10h)
 - Creating an annotated bibliography of the papers found so far and putting them in relation to 
@@ -69,12 +74,12 @@ Mo 20.4. (5h)
 
 We 22.4. (6h)
 - Preparing the slides for the Project Proposal Presentation on friday
-- Extending literature review for the Project Proposal Assignment due on friday
+- Extending the literature review for the Project Proposal Assignment due on friday
 
 Do 23.4. (6 1/2h)
 - Meeting with Roberto to check the Presentation Slides
-- Reading and scanning the remaining found literature and drawing up a draft for the Poject Proposal's 
-	Literature Review
+- Reading and scanning the remaining literature found so dar and drawing up a draft for the Poject 
+	Proposal's Literature Review
 - Creating Gantt and PERT charts of project planning
 
 Fr 24.4. (8h)
@@ -84,73 +89,190 @@ Fr 24.4. (8h)
 - Writing the Project Proposal (Assignment 6)
 
 Sa 25.4. (1 1/2h)
-- Setting up Repast and start working on the tutorial
+- Setting up Repast and Eclipse and start working on the zombie tutorial
 
 So 26.4. (7 1/2h)
 - Completing the tutorial 
-- Working on a first attempt to my CyberSym simulation. At the end of the day I have basic agents and 
-	resources; The agents die in the course of time as they cannot yet get any resources - and the
-	resources keep regenerating till infinity. But it's a start.
+- Working on a first attempt to my CyberSym simulation. At the end of the day I have basic agents  
+	and resources; The agents die in the course of time as they cannot yet get any resources - and 
+	the resources keep regenerating till infinity. But it's a start.
 	Design choices so far: I implemented different classes for the Agents, Resources and Sources
-	(the locations where Resources spawn and can be extracted by the Agents). Resources are 
-	represented by letters of the english alphabet that in the next steps can be used to assemble
-	products to be consumed by the agents. The Resource class is necessary as a resource has much
-	more features than just its resource type. 
+	(the locations where Resources spawn and can be extracted by the Agents). 
+	* Resources are represented by letters of the english alphabet that in the next steps can be 
+	used to assemble products to be consumed by the agents. 
+	* Agents have a certain lifespan measured in ticks (Repast's time measure). If the lifespan 
+	reaches zero, Agents are removed from the grid. 
+	* The grid is a wrapped around environment representation that can be used to simulate distances 
+	between objects. 
 
 Mo 27.4. (6h)
-- Continue to work on the model. At the end of the day, agents can extend their lifespan by mining 	
-	resources untill they are exhausted. Then the same happens as did yesterday - Everyone dies.
-	Sources may regenrate at a given (randomized) rate, Agents can extract one Resource unit per
-	cycle. Extracting a resource costs the equivalent of the pyhtagorean distance between Agent 
-	and Source. The environment grid "wraps around" so that its border connect to those on the 
-	opposite side of the grid. The environment thus effectively forms a globe.
+- Continuing to work on the model. At the end of the day, agents can extend their lifespan by mining 	
+	resources untill they are exhausted. Then the same happens as did yesterday: Everyone dies.
+	* Sources may regenrate at a given (randomized) rate, Agents can extract one Resource unit per
+	tick. 
+	*Extracting a resource costs the equivalent of the pyhtagorean distance between Agent 
+	and Source.
+	* Agents have a limited scope for reaching Sources in their neighborhood.
 - Commenting everything I have done so far
 - Setting up Repast on my Laptop 
 
 Tu 28.4. (6 1/2h)
-- Further work on the model. Adding a function to read a comma separated list of words from a file in
-	order to create the possible products that can be assembled by the agents. Implementing a
-	Product class to hold the features of an assembled product. Updating Resource and Agent class
-	to add the possibility of creating products and starting to work on functions to assemble pro-
-	ducts from Resources. 
+- Further work on the model. Adding a function to read a comma separated list of words from a file 
+	in order to generate the possible products that can be assembled by the agents. 
+	* Implementing a Product class to hold the features of an assembled product. 
+	* Updating Resource and Agent class to add the possibility of assembling products and starting 
+	to work on assembly procedures.
 
 We 29.4. (7h)
-- Adding functions for combining basic Resources to partial products, combining Resources and partial
-	Products as well as combining Product parts themselves. Implementing functions to generate 
-	a list of all indirect demands that can be derived from the Product demand.  
+- Adding functions for combining basic Resources to partial products, combining Resources and 
+	partial Products as well as combining Product parts to bigger ones. 
+- Implementing procedures to generate a list of all indirect demands that can be derived from the 
+	Agent's Product demand.  
 
 Th 30.4. (7 1/2h)
 - Updating the different classes to fully incorporate the production of assembled items and the 
 	consumption thereof. Experimenting with the built-in visualisation tools of Repast and genera-
-	ting a number of different visualisations. Debugging some of the functionalities
+	ting a number of different visualisations. 
+- Debugging some of the functionalities
 
-Fr 1.5. (6h)
-- Implementing a first linear decision mechanism. Developing a useful order and fixing some issues that
-	arose through paralellity (some instances were not yet instantiated when called by other in-
-	stances etc.
+Fr 01.5. (6h)
+- Implementing a first linear decision mechanism: I developed a reasonable sequence to follow when
+	deciding on which action to take (All if-else):
+	1. Consume a demanded product
+	2. Assemble a demanded product
+	3. Assemble a partial product from other parts in the inventory
+	4. Assemble a simple product part from two resources
+	5. Extract a resource 
+- Fxing some issues that arose through paralellity (some instances were not yet instantiated when 
+	called by other instances etc.
 
-Sa 2.5. (5h)
-- Finishing a first working version of the simulation without Agent communication. Agents now survive as
-	long as there are sufficient Resources in their environment. When there is scarcity or the 
-	Agents exhaust the Sources, they die. 
-- Redesigning some of the funtions to make them more efficient with respect to recent changes to the 
-	different classes
+Sa 02.5. (5h)
+- Completing a first working version of the model simulation without Agent communication. Agents now 
+	survive as long as there are sufficient Resources in their neighborhood. When there is scarcity 
+	or the Agents exhaust the Sources, they die. 
+- Redesigning some of the funtions to make them more efficient with respect to recent datastructure 
+	changes in various classes
 
-Mo 4.5. (3h)
-- Implementing first functions for Agent communication. Agents may now request Resources that are not 
-	within their reach
+Mo 04.5. (3h)
+- Implementing first functions for Agent communication. 
+	* Agents may now (only) request Resources that are not within their scope. 
+	* Agents have a limited scope of communicating with other Agents.
 
-Tu 5.5. (4h)
-- Adding the transport of basic Resources. Agents may now also decide to extract a resource for one of 
-	their neighbors and deliver it to him.
+Tu 05.5. (4h)
+- Adding the option of delivery of basic Resources. 
+	* Agents may now also decide to extract a resource for one of their neighbors or deliver a 
+	requested Resource that they have in their invenotry.
 
-We 6.5. (9 1/2h)
-- Implementing a customized bar chart to visualise demand, supply, request and depletion of resources.
-	This was far more complicated than necessary and still may be optimized, but it gives a good
-	first idea about what is happening in the system.
-- Optimizing some functionalities to better make use of new forms of datastructures 
+We 06.5. (9 1/2h)
+- Implementing a customized bar chart to visualise Resource demand, supply, request and the deplet-
+	ion of Sources. This was far more complicated than necessary and still may be optimized, but it 
+	gives a good first idea about what is happening in the system.
+- Optimizing some procedures to make better use of newly added datastructures 
 - Commenting all new functionality
 
+Fr 08.5. (5h)
+- Adding the possibility of requesting product parts of size 2 from Agents in the neighborhood. 
+	Agents can now also choose to assemble products for other Agents or deliver them to them
+	* Introducing a rating function for request waiting time to evaluate the importance of ful-
+	filling a certain request
+- Optimizing some code and completing comments
 
+Su 10.5. (4h)
+- Introducing a datastructure called jobList to manage external and internal requests
+
+Mo 11.5. (8h)
+- Completing the work on the jobList and preparing another completely working intermediate simula-
+	tion with the respective visualisations
+
+Tu 12.5. (5h)
+- Meeting with Roberto to dicuss the project progress. 
+- Developping a function to prevent circular chains of request or infinite request propagation 
+	(Call requester)
+
+Sa 16.5. (2h)
+- Evaluating simulation performance, speed and visualiation utility; Discovering some optimization 
+	possibilities
+
+Mo 18.5. (4h)
+- Reformulating some functions and increasing code efficiency
+
+Tu 19.5. (7h)
+- Giving the finishing touch to a new version of the simulation model; Adding new visualisations and 
+	commenting the code 
+
+Th 21.5. (6h)
+- Meeting with Roberto. While evaluating some system runs, we decide to re-design the intial model:
+	Since Agents have the lifespan measurement that determines for how long they can stay active, a
+	very unnatural situation emerges quite often: Some Agents can, based on their good location, 
+	fulfill a comparably high number of demands during the first few ticks of a simulation run. By 
+	doing so, they assemble an enormous amount of saved lifetime. When now resources become scarce, 
+	these Agent's lifespan buffer allows them to survive for "years" without the consumption of any
+	new item. This is an unreasonable assumption for the model. What is more, since the Agents can
+	only have one demand at a time, Resource scarcity will lead to the impossibility of fulfilling 
+	that demand, leaving the Agent no other option than to tick away his time. Sooner or later, all
+	Agents will be assigned that demand, leaving the system to collapse.
+- New model design choices:
+	* Agents get a 72h (ticks) period to fulfill at least one Wish (demand), otherwise they are 
+	removed from the grid
+	* Agents can work 8h per day (24h), a total of 24h within the 72h period
+	* Per 8h hours of work, an Agent is granted an additional Wish, giving it the possibility of 
+	stalling currently unavailable requests.
+	* All actions cost 1 since they all refer to objects within the Agent's scope
+	* Consumption of products is free
+	* The system needs to get non-hardcoded "Intelligence" to determine Agent action
+- Starting to rewrite the code to implement the new functionality
+
+Mo 25.5. (4h)
+- Developping first mathematical functions for the Agent action decision process
+
+Tu 26.5. (6h)
+- Further work on the decision functions
+- Continue rewriting the code to implement the latest design choices
+
+We 27.5. (3h)
+- Preparing the progress presentation slides
+- Continue rewriting the code to implement the latest design choices
+- Identifying a potential issue with request propagation: If waiting time is used to sort the
+	jobList and determine the X highest rating requests, an Agent's own requests will flush this
+	list eventually and prevent its neighbor's requests from spreading in the network.
+
+Tu 28.5. (5h)
+- Meeting with Roberto to check the presentation slides. This time we decide on some changes that I
+	integrate into the presentation later on. 
+- Deciding to remove the limitation of evaluated and passed on requests by changing the Agent's 
+	request Hashtable to take a request type as key and all requesting Agents as values. 
+- Continue rewriting the code to implement the latest design choices
+
+Fr 29.5. (7h)
+- Project Progress Presentation. The presentation went alright - I could control my voice better 
+	than the last time and the nervousness only affected the first half minute. Quiri and I got the
+	tip to look into Agent centrality, an important aspect of MAS and threshold effects that appear
+	to be quite unpredictable for more complex simulation settings
+- Implementing the "Intelligence" functions and updating some data structures and classes to incor-
+	porate them 
+
+Sa 30.5. (8h)
+- Putting some finishing touches on the program code and getting it ready for bugfixing. 
+	New design choices:
+	* Resources and Products are now subclasses of Item that combines the basic attributes of both 
+	these classes.
+	* The Agent inventory became a class on its own to accomodate the increasingly complex controll
+	procedures
+	* After checking the incoming neighbor requests, the Agent creates instances of the AgentAction
+	class to represent rated, possible actions
+	* All intelligence functionality is accommodated in the static IntelligenceInterface class
+
+Su 31.5. (3h)
+- Starting to bugfix the code
+
+Mo 01.5. (6h)
+- Fixing some last syntatctical errors. The model simulation now runs again and can be checked for 
+	errors in program flow or action rating assignment
+
+Tu 02.5. ()
+- Producing a working version of the new model approach which now can be used to evaluate the 
+	intelligence settings, determine the fixed parameters and start some batch runs
+- Updating the logbook (after some time of neglect)
+- Start working on the Academic English Writing dask due tomorrow night (assignment 8)
 
 

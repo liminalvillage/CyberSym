@@ -1,9 +1,9 @@
 <repast.simphony.chart2.engine.TimeSeriesChartDescriptor>
-  <name>Source Behavior</name>
-  <dataSet>Source Data</dataSet>
+  <name>System Behavior</name>
+  <dataSet>System Data</dataSet>
   <xAxisLabel>Tick Count</xAxisLabel>
-  <yAxisLabel>Amount</yAxisLabel>
-  <chartTitle>Source Behavior</chartTitle>
+  <yAxisLabel>AMount</yAxisLabel>
+  <chartTitle>System Behavior</chartTitle>
   <type>TIME_SERIES</type>
   <background>
     <red>255</red>
@@ -21,25 +21,25 @@
   <showLegend>true</showLegend>
   <seriesIds>
     <entry>
-      <string>Quantity</string>
+      <string>Mean Production Cost</string>
       <SeriesData>
-        <label>Quantity</label>
+        <label>Mean Production Cost</label>
         <color>
-          <red>0</red>
+          <red>255</red>
           <green>0</green>
-          <blue>255</blue>
+          <blue>0</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>
     </entry>
     <entry>
-      <string>Extractions</string>
+      <string>Mean Production Cost Ratio</string>
       <SeriesData>
-        <label>Extractions</label>
+        <label>Mean Production Cost Ratio</label>
         <color>
-          <red>255</red>
+          <red>0</red>
           <green>0</green>
-          <blue>0</blue>
+          <blue>255</blue>
           <alpha>255</alpha>
         </color>
       </SeriesData>

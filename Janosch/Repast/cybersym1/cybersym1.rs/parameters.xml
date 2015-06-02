@@ -7,25 +7,25 @@
 									
 		/>
 				<parameter name="scope_agents" displayName="Agent Scope Agents" type="int" 
-						defaultValue="50" 
+						defaultValue="20" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="max_quantity" displayName="Max. Initial Source Capacity" type="int" 
-						defaultValue="15" 
+						defaultValue="200" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="min_lifespan" displayName="Minimum Agent Lifespan" type="int" 
-						defaultValue="500" 
+				<parameter name="requirement_demand" displayName="Requirement for new Wish" type="int" 
+						defaultValue="12" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
-				<parameter name="max_lifespan" displayName="Maximum Agent Lifespan" type="int" 
-						defaultValue="1000" 
+				<parameter name="without_consume" displayName="Evaluation period" type="int" 
+						defaultValue="72" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -37,31 +37,43 @@
 									
 		/>
 				<parameter name="min_quantity" displayName="Minimum Source Capacity" type="int" 
-						defaultValue="10" 
+						defaultValue="100" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="max_workload" displayName="Max. working hours per day" type="int" 
+						defaultValue="12" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="grid_width" displayName="Grid Width" type="int" 
-						defaultValue="30" 
+						defaultValue="50" 
+						isReadOnly="false" 
+						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
+									
+		/>
+				<parameter name="ticks_day" displayName="Ticks per Day" type="int" 
+						defaultValue="24" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="agent_count" displayName="Number of Agents" type="int" 
-						defaultValue="30" 
+						defaultValue="15" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="min_regeneration" displayName="Min Regeneration Period" type="int" 
-						defaultValue="10" 
+						defaultValue="2" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="max_regeneration" displayName="Max. Regeneration Period" type="int" 
-						defaultValue="20" 
+						defaultValue="10" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
@@ -73,13 +85,13 @@
 									
 		/>
 				<parameter name="grid_height" displayName="Grid Height" type="int" 
-						defaultValue="30" 
+						defaultValue="50" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 									
 		/>
 				<parameter name="show_histogram" displayName="Display additional Histogram" type="java.lang.String" 
-						defaultValue="yes" 
+						defaultValue="no" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$StringStringConverter"
 									

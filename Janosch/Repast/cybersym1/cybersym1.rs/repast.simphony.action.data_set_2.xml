@@ -1,5 +1,5 @@
 <repast.simphony.data2.engine.DataSetDescriptor>
-  <name>Agent Counter</name>
+  <name>System Data</name>
   <type>AGGREGATE</type>
   <inclTick>true</inclTick>
   <inclBatchRun>false</inclBatchRun>
@@ -11,26 +11,30 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-973605966</hashCode>
+    <hashCode>1190987062</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
-  <methodDataSources class="linked-hash-map"/>
-  <countSources class="linked-hash-map">
+  <methodDataSources class="linked-hash-map">
     <entry>
-      <string>Agent Count</string>
-      <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>cybersym1.Agent</typeName>
-        <id>Agent Count</id>
-      </repast.simphony.data2.engine.CountSourceDefinition>
+      <string>Mean Production Cost Ratio</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Mean Production Cost Ratio</id>
+        <className>cybersym1.Evaluation</className>
+        <methodName>getMeanRatio</methodName>
+        <aggType>MAX</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
     <entry>
-      <string>Source Count</string>
-      <repast.simphony.data2.engine.CountSourceDefinition>
-        <typeName>cybersym1.Source</typeName>
-        <id>Source Count</id>
-      </repast.simphony.data2.engine.CountSourceDefinition>
+      <string>Mean Production Cost</string>
+      <repast.simphony.data2.engine.MethodDataSourceDefinition>
+        <id>Mean Production Cost</id>
+        <className>cybersym1.Evaluation</className>
+        <methodName>getMeanCost</methodName>
+        <aggType>MAX</aggType>
+      </repast.simphony.data2.engine.MethodDataSourceDefinition>
     </entry>
-  </countSources>
+  </methodDataSources>
+  <countSources class="linked-hash-map"/>
   <customNADataSources class="linked-hash-map"/>
   <customAggDataSources class="linked-hash-map"/>
 </repast.simphony.data2.engine.DataSetDescriptor>

@@ -5,6 +5,7 @@ thu 23-4:	9h proposal preparation and making the presentation
 fri 24-4:	1h presentations, 1h meeting, 9h proposal writing
 sat 25-4:	sick
 sun 26-4:	sick
+------------------------------------------------------------------------------------------------
 mon 27-4:	sick
 tue 28-4:	sick, 1h other course
 wed 29-4:	sick, 3h other course
@@ -12,6 +13,7 @@ thu 30-4:	5h programming
 fri 1-5:	9h programming
 sat 2-5:	3h other course
 sun 3-5:	-
+------------------------------------------------------------------------------------------------
 mon 4-5:	7h programming
 tue 5-5:	9h debugging, 	
 			agents get "food" needs, factories try to fulfill those needs, 
@@ -25,6 +27,7 @@ thu 7-5:	1,5h other course
 fri 8-5:	1,5h meeting, 5h programming
 sat 9-5:	3h other course
 sun 10-5:	8,5h other course
+------------------------------------------------------------------------------------------------
 mon 11-5:	5h programming, 0,5h other course
 tue 12-5: 	6h other course, 2h programming
 wed 13-5:	7h other course
@@ -32,6 +35,7 @@ thu 14-5:	-
 fri 15-5:	-
 sat 16-5:	3h other course, 5,5h programming
 sun 17-5:	-
+------------------------------------------------------------------------------------------------
 mon 18-5:	7h programming
 tue 19-5:	3,5h programming, 1,5h meeting
 wed 20-5:	4h other course, 9h programming ...
@@ -39,7 +43,17 @@ thu 21-5:	3h programming
 fri 22-5:	10h other course
 sat 23-5:	-
 sun 24-5:	-
+------------------------------------------------------------------------------------------------
 mon 25-5:	-
 tue 26-5:	2h Academic English, 4,5h programming 
 wed 27-5:	6h programming, 2,5h meeting, 1h presentation
+thu 28-5:	5h presentation 
+fri 29-5:	1h presentations, 3h programming
+sat 30-5:	?
+sun 31-5:	-
+------------------------------------------------------------------------------------------------
+mon 01-6:	7h master application
+tue 02-6:	10h programming
+wed 03-6:	5h programming, 5h literature review
+thu 04-6:	7h programming
 

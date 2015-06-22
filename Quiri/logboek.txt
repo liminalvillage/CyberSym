@@ -56,4 +56,24 @@ mon 01-6:	7h master application
 tue 02-6:	10h programming
 wed 03-6:	5h programming, 5h literature review
 thu 04-6:	7h programming
-
+fri 05-6:	9,5 programming
+sat 06-6:	9h programming
+sun 07-6:	3h programming
+------------------------------------------------------------------------------------------------
+mon 08-6:	2h Academic English, 5,5h programming
+tue 09-6:	5h programming
+wed 10-6:	13h
+thu 11-6:	-
+fri 12-6:	-
+sat 13-6:	3h
+sun 14-6:	7,5h
+------------------------------------------------------------------------------------------------
+mon 15-6:	8h
+tue 16-6:	10h
+wed 17-6:	8,5h
+thu 18-6:	5,5h
+fri 19-6:	7,5h
+sat 20-6:	8,5h
+sun 21-6:	9h 
+------------------------------------------------------------------------------------------------
+mon 22-6:	
